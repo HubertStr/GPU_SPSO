@@ -32,5 +32,5 @@ f4: (-10, 10)^D<br/>
 
 ## First step: Random number generation
 Two methods will be implemented:<br/>
-    - [ ] Method1: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.
-    - [ ] Method2: Uses cuRAND to generate pseudorandom numbers on the GPU    
+    - [ ] Method1: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
+    - [ ] Method2: Uses cuRAND to generate pseudorandom numbers on the GPU.<br/>    
