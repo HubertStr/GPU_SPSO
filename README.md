@@ -6,13 +6,17 @@ Our project is based on the following paper:<br/>
 ![Link to paper](https://ieeexplore.ieee.org/document/4983119).
 
 ## Objective functions:
-f1:![This is an image](./images/f1.png).
+f1:
+![This is an image](./images/f1.png).
 
-f2:![This is an image](./images/f2.png).
+f2:
+![This is an image](./images/f2.png).
 
-f3:![This is an image](./images/f3.png).
+f3:
+![This is an image](./images/f3.png).
 
-f4:![This is an image](./images/f4.png).
+f4:
+![This is an image](./images/f4.png).
 
 
 ## Constraints
@@ -32,5 +36,6 @@ f4: (-10, 10)^D<br/>
 
 ## First step: Random number generation
 Two methods will be implemented:<br/>
-- [ ] Method1: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
-- [ ] Method2: Uses cuRAND to generate pseudorandom numbers on the GPU.<br/>    
+- [ ] Method1: Uses cuRAND to generate pseudorandom numbers on the GPU.<br/>
+- [ ] Method2: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
+    
