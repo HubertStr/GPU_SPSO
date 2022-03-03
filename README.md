@@ -38,5 +38,6 @@ f4: (-10, 10)^D<br/>
 Two methods will be implemented:<br/>
 - [ ] Method1: Uses cuRAND to generate pseudorandom numbers on the GPU.<br/>
 - [ ] Method2: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
-See ![this link](https://docs.nvidia.com/cuda/curand/host-api-overview.html) for random number generation 
+<br/>
+See https://docs.nvidia.com/cuda/curand/host-api-overview.html for random number generation 
     
