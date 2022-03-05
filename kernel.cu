@@ -7,15 +7,14 @@ __global__void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity,
 {
     int index = blockDim.x * blockIdx.x + threadIdx.x;
     int t_index = threadIdx.x;
-
-    //Rescale pos between xmin and xmax
-    pos[index] = x_max * (2.0f * pos[index] - 1.0f);
-
-    //Rescale velocity
+    
+    //Rescale velocity so that it is within the bounds
     velocity[index] =(x_max - x_min) * (2.0f * velocity[index] - 1.0f);
     
-    //Set PBest to infinity and LBest to self
-    //Initialize array of best indices
+    //Rescale pos so that it is within the bounds
+    pos[index] = x_max * (2.0f * pos[index] - 1.0f);
+    
+    //Initializing p_best_y to infinity and local best to self
     if (t_index == 0)
     {
         p_best_y[blockIdx.x] = inf;
@@ -23,13 +22,12 @@ __global__void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity,
         best_index[blockIdx.x] = blockIdx.x;
     }
 
-    //Initializing up cuRAND
-    //Each thread gets a different seed, different sequence number and no offset
+    //call of Curand_init on a specific curandState, seed and no offset for each thread
     curand_init(index, index, 0, &states[index]);
 }
 
 // Kernel to compute the actual iterations of the updates 
-_global_void Iterate(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float *c_1, float *c_2)
+_global_void Iterations(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float *c_1, float *c_2)
 {
     int index = threadIdx.x + blockDim.x * blockIdx.x;
     
@@ -46,7 +44,7 @@ _global_void Iterate(float *xmax, float *xmin, float *pos, float *velocity, floa
         fitness += pos[index * D + i] * pos[index * D +i];
   
    
-    //Set PBest if fitness is better
+    //If fitness is better, change particle best
     if (p_best_y[index] > fitness)
     {
       p_best_y[index] = fitness;
@@ -55,7 +53,7 @@ _global_void Iterate(float *xmax, float *xmin, float *pos, float *velocity, floa
     }
     personal_best = p_best_y[index];
     
-    //Set left and right neighbours
+    //Look up for left and right neighbours
     int left = (N + index - 1) % N;
     int right = (1 + index) % N;
     
@@ -66,7 +64,7 @@ _global_void Iterate(float *xmax, float *xmin, float *pos, float *velocity, floa
       l_best_index[index] = right;
     local_best = l_best_index[index];
     
-    //Update the particle velocity and position
+    //Compute and update particle velocity and position
     for (int i = 0; i < D; i++)
     {
       int j = index * D + i;
