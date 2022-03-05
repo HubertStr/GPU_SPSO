@@ -1,18 +1,17 @@
-//Kernel to Scale velocity and position values to be between the max and min (and not between 0 and 1 anymore)
-// AND initialize particle best (for each particle) + local best 
+#include <curand.h>
+#include <curand_kernel.h>
 
 #define inf 9999.99f
 
-__global__void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, curandState *states)
-{
+__global__ void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, curandState *states){
     int index = blockDim.x * blockIdx.x + threadIdx.x;
     int t_index = threadIdx.x;
     
     //Rescale velocity so that it is within the bounds
-    velocity[index] =(x_max - x_min) * (2.0f * velocity[index] - 1.0f);
+    velocity[index] =(xmax - xmin) * (2.0f * velocity[index] - 1.0f);
     
     //Rescale pos so that it is within the bounds
-    pos[index] = x_max * (2.0f * pos[index] - 1.0f);
+    pos[index] = xmax * (2.0f * pos[index] - 1.0f);
     
     //Initializing p_best_y to infinity and local best to self
     if (t_index == 0)
@@ -27,8 +26,7 @@ __global__void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity,
 }
 
 // Kernel to compute the actual iterations of the updates 
-_global_void Iterations(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float *c_1, float *c_2)
-{
+__global__ void Iterations(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float *c_1, float *c_2, *D, *N, *chi){
     int index = threadIdx.x + blockDim.x * blockIdx.x;
     
     float r1, r2;
@@ -72,7 +70,7 @@ _global_void Iterations(float *xmax, float *xmin, float *pos, float *velocity, f
       r2 = curand_uniform(&local_state);
       
       // Compute the velocity
-      velocity[j] = chi * (velocity[j] + (c1 * r1 * (p_best_pos[j] - pos[j])) + (c2 * r2 * (p_best_pos[local_best] - pos[j])));
+      velocity[j] = chi * (velocity[j] + (c_1 * r1 * (p_best_pos[j] - pos[j])) + (c_1 * r2 * (p_best_pos[local_best] - pos[j])));
       
       //Ensure velocity values are within range
       if (velocity[j] > (xmax - xmin) )

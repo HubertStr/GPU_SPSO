@@ -2,10 +2,11 @@
 
 
 #include <stdio.h>
-#include "support.h"
 #include "kernel.cu"
 #include <curand.h>
 #include <curand_kernel.h>
+#include <math.h>
+
 
 #define max_iters 2048              //number of iterations
 
@@ -20,6 +21,14 @@ int main(int argc, char**argv){
     float xmin_h;
     float c_1_h;
     float c_2_h;
+    float chi_h;
+    int N;
+    int D;
+    float xmax;
+    float xmin;
+    float chi;
+    float c_1;
+    float c_2;
     float inertia_h;int *local_best_index, *best_index;
     float *particle_position, *particle_velocity;
     float *p_best_pos, *p_best_fitness;
@@ -40,6 +49,7 @@ int main(int argc, char**argv){
         c_2_h = atoi(argv[++i]);
         inertia_h =  atoi(argv[++i]);
     }
+    chi_h = 2/abs(2-c_1_h-c_2_h-sqrt((c_2_h+c_1_h)**2-4*(c_2_h+c_1_h)))
 
 //  MEMORY ALLOCATION
 
@@ -56,6 +66,7 @@ int main(int argc, char**argv){
     cudaMalloc((void**)&c_1, sizeof(float));
     cudaMalloc((void**)&c_2, sizeof(float));
     cudaMalloc((void**)&inertia, sizeof(float));
+    cudaMalloc((void**)&chi, sizeof(float));
 
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
@@ -64,6 +75,12 @@ int main(int argc, char**argv){
     startTime(&timer);    
 
     cuda_ret = cudaMemcpy(N, N_h, sizeof(float), cudaMemcpyHostToDevice);
+	if(cuda_ret != cudaSuccess)
+    {
+      printf("CUDA Error in N memory allocation on device: %s\n", cudaGetErrorString(err));
+      exit(-1);
+    }
+    cuda_ret = cudaMemcpy(chi, chi_h, sizeof(float), cudaMemcpyHostToDevice);
 	if(cuda_ret != cudaSuccess)
     {
       printf("CUDA Error in N memory allocation on device: %s\n", cudaGetErrorString(err));
@@ -222,7 +239,7 @@ int main(int argc, char**argv){
     printf("Launch kernel to compute iterations ..."); fflush(stdout);
     startTime(&timer); 
     for (int i = 0; i < max_iters; i++){
-        Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2);
+        Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2, D, N, chi);
     }
    cudaError_t err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
