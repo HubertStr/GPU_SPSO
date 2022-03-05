@@ -1,67 +1,69 @@
 // Let this script use GPU generated random numbers
 
+
 #include <stdio.h>
 #include "support.h"
 #include "kernel.cu"
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define c_1 1    //nonnegative constants
-#define c_2 1    //nonnegative constants
-#define inertia 0.5    //within [0,1]
-
 #define max_iters 2048              //number of iterations
-#define phi c_1+c_2
 
-// #define chi 0.72984f                //chi (constriction factor)
-// #define pi 3.14159265f
-// #define inf 9999.99f                //infinity
+#define inf 9999.99f                //infinity
 
 
 int main(int argc, char**argv){
-    
+    Timer timer;
+
     float *global_best;
     float *global_best_pos;
-    float *pos, *velocity;
-    float *p_best_x, *p_best_y;
-    int *local_best_index, *best_local_index;
+    float *particle_position, *particle_velocity;
+    float *p_best_pos, *p_best_fitness;
+    int *local_best_index, *best_index;
     curandState *states;
-    unsigned int N;
-    unsigned int D;
-    unsigned float xmax;
-    unsigned float xmin;
-    unsigned float c_1;
-    unsigned float c_2;
-    unsigned float inertia;
+    int N_h;
+    int D_h;
+    float xmax_h;
+    float xmin_h;
+    float c_1_h;
+    float c_2_h;
+    float inertia_h;
 
 
+
+
+    // malloc((void**)&global_best_h, D * sizeof(float));
+    // malloc((void**)&global_best_index_h, sizeof(float));
+    // malloc((void**)&N_h, sizeof(float));
+    // malloc((void**)&D_h, sizeof(float));
+    // malloc((void**)&xmax_h, sizeof(float));
+    // malloc((void**)&xmin_h, sizeof(float));
+    // malloc((void**)&c_1_h, sizeof(float));
+    // malloc((void**)&c_2_h, sizeof(float));
+    // malloc((void**)&inertia_h, sizeof(float));
+    
     if (argc<2)
     {
         printf("You need add 2 parameters\n");
         return 1;
     }
     for (int i=1; i<argc; i++){
-        N= atoi(argv[i]);
-        D= atoi(argv[++i]);
-        xmax= atoi(argv[++i]);
-        xmin = atoi(argv[++i]);
-        c_1 = atoi(argv[++i]);
-        c_2 = atoi(argv[++i]);
-        inertia =  atoi(argv[++i]);
+        N_h= atoi(argv[i]);
+        D_h= atoi(argv[++i]);
+        xmax_h= atoi(argv[++i]);
+        xmin_h = atoi(argv[++i]);
+        c_1_h = atoi(argv[++i]);
+        c_2_h = atoi(argv[++i]);
+        inertia_h =  atoi(argv[++i]);
     }
 
 //  MEMORY ALLOCATION
 
+    printf("\nMEMORY ALLOCATION..."); fflush(stdout);
+    startTime(&timer);
+
     // Host and device meory allocation of input variables
-    malloc((void**)&global_best_h, D * sizeof(float));
-    malloc((void**)&global_best_index_h, sizeof(float));
-    malloc((void**)&N_h, sizeof(float));
-    malloc((void**)&D_h, sizeof(float));
-    malloc((void**)&xmax_h, sizeof(float));
-    malloc((void**)&xmin_h, sizeof(float));
-    malloc((void**)&c_1_h, sizeof(float));
-    malloc((void**)&c_2_h, sizeof(float));
-    malloc((void**)&inertia_h, sizeof(float));
+    printf("Device memory allocation of input variables..."); fflush(stdout);
 
     cudaMalloc((void**)&global_best, D * sizeof(float));
     cudaMalloc((void**)&global_best_index, sizeof(float));
@@ -73,7 +75,12 @@ int main(int argc, char**argv){
     cudaMalloc((void**)&c_2, sizeof(float));
     cudaMalloc((void**)&inertia, sizeof(float));
 
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+
     // Migrate from host to device the inputs
+    printf("Migrate from host to device the inputs..."); fflush(stdout);
+    startTime(&timer);    
+
     cuda_ret = cudaMemcpy(global_best, global_best_h, D * sizeof(float), cudaMemcpyHostToDevice);
 	if(cuda_ret != cudaSuccess)
     {
@@ -136,7 +143,12 @@ int main(int argc, char**argv){
       printf("CUDA Error in inertia memory allocation on device: %s\n", cudaGetErrorString(err));
       exit(-1);
     }
+    cudaDeviceSynchronize();
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
+    // Allocating memory for all other variables that do not come from input
+    printf("Allocating memory for all other variables that do not come from input ..."); fflush(stdout);
+    startTime(&timer); 
 
     //Particle position array (=Position in Git)
     cudaMalloc((void**)&particle_position, N * D * sizeof(float));
@@ -191,10 +203,12 @@ int main(int argc, char**argv){
       printf("CUDA Error in Global best index value memory allocation: %s\n", cudaGetErrorString(err));
       exit(-1);
    }
-
-    printf("ALL GOOD FOR MEMORY ALLOCATION");
+    cudaDeviceSynchronize();
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
 //  Initialization of random numbers on GPU
+    printf("Initialization of random numbers on GPU for particle's velocity and position ..."); fflush(stdout);
+    startTime(&timer); 
     curandGenerator_t generator;
     curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
     curandSetPseudoRandomGeneratorSeed(generator, time(NULL));
@@ -215,15 +229,40 @@ int main(int argc, char**argv){
       printf("CUDA Error in random generation for intial particle position: %s\n", cudaGetErrorString(err));
       exit(-1);
    }
+    cudaDeviceSynchronize();
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+
+
 
 // Scale velocity and position values to be between the max and min (and not between 0 and 1 anymore)
 // AND initialize particle best (for each particle) + local best 
-
-    Scale_Init <<< N, D >>>(particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states, xmax, xmin);
+    printf("Launch kernel to scale and initialize ..."); fflush(stdout);
+    startTime(&timer); 
+    Scale_Init <<< N, D >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
     cudaError_t err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error Scale Init: %s\n", cudaGetErrorString(err));
       exit(-1);
-   }   
+   }
+    cudaDeviceSynchronize();
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+
+//  Kernel for iterations
+    printf("Launch kernel to compute iterations ..."); fflush(stdout);
+    startTime(&timer); 
+    const unsigned int THREADS_PER_BLOCK = 200;
+    const unsigned int numBlocks = N/THREADS_PER_BLOCK;
+    dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);
+    for (int i = 0; i < max_iters; i++){
+        Iterate<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2);
+    }
+   cudaError_t err = cudaGetLastError();        // Get error code
+   if ( err != cudaSuccess )
+   {
+      printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+      exit(-1);
+   }
+    cudaDeviceSynchronize();
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 }
