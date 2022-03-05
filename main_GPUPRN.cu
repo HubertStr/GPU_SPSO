@@ -14,34 +14,18 @@
 
 int main(int argc, char**argv){
     Timer timer;
-
-    float *global_best;
-    float *global_best_pos;
-    float *particle_position, *particle_velocity;
-    float *p_best_pos, *p_best_fitness;
-    int *local_best_index, *best_index;
-    curandState *states;
     int N_h;
     int D_h;
     float xmax_h;
     float xmin_h;
     float c_1_h;
     float c_2_h;
-    float inertia_h;
+    float inertia_h;int *local_best_index, *best_index;
+    float *particle_position, *particle_velocity;
+    float *p_best_pos, *p_best_fitness;
+    curandState *states;
 
 
-
-
-    // malloc((void**)&global_best_h, D * sizeof(float));
-    // malloc((void**)&global_best_index_h, sizeof(float));
-    // malloc((void**)&N_h, sizeof(float));
-    // malloc((void**)&D_h, sizeof(float));
-    // malloc((void**)&xmax_h, sizeof(float));
-    // malloc((void**)&xmin_h, sizeof(float));
-    // malloc((void**)&c_1_h, sizeof(float));
-    // malloc((void**)&c_2_h, sizeof(float));
-    // malloc((void**)&inertia_h, sizeof(float));
-    
     if (argc<2)
     {
         printf("You need add 2 parameters\n");
@@ -65,8 +49,6 @@ int main(int argc, char**argv){
     // Host and device meory allocation of input variables
     printf("Device memory allocation of input variables..."); fflush(stdout);
 
-    cudaMalloc((void**)&global_best, D * sizeof(float));
-    cudaMalloc((void**)&global_best_index, sizeof(float));
     cudaMalloc((void**)&N, sizeof(float));
     cudaMalloc((void**)&D, sizeof(float));
     cudaMalloc((void**)&xmax, sizeof(float));
@@ -80,20 +62,6 @@ int main(int argc, char**argv){
     // Migrate from host to device the inputs
     printf("Migrate from host to device the inputs..."); fflush(stdout);
     startTime(&timer);    
-
-    cuda_ret = cudaMemcpy(global_best, global_best_h, D * sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in global_best memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(global_best_index, global_best_index_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in global_best_index memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
 
     cuda_ret = cudaMemcpy(N, N_h, sizeof(float), cudaMemcpyHostToDevice);
 	if(cuda_ret != cudaSuccess)
@@ -233,12 +201,14 @@ int main(int argc, char**argv){
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
 
-
 // Scale velocity and position values to be between the max and min (and not between 0 and 1 anymore)
 // AND initialize particle best (for each particle) + local best 
     printf("Launch kernel to scale and initialize ..."); fflush(stdout);
     startTime(&timer); 
-    Scale_Init <<< N, D >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
+    const unsigned int THREADS_PER_BLOCK = 200;
+    const unsigned int numBlocks = N/THREADS_PER_BLOCK;
+    dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);    
+    Scale_Init <<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
     cudaError_t err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
@@ -251,11 +221,8 @@ int main(int argc, char**argv){
 //  Kernel for iterations
     printf("Launch kernel to compute iterations ..."); fflush(stdout);
     startTime(&timer); 
-    const unsigned int THREADS_PER_BLOCK = 200;
-    const unsigned int numBlocks = N/THREADS_PER_BLOCK;
-    dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);
     for (int i = 0; i < max_iters; i++){
-        Iterate<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2);
+        Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2);
     }
    cudaError_t err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
