@@ -1,0 +1,23 @@
+# Request 10 minutes of wall-clock time.
+#PBS -l walltime=10:00
+
+# Request 4 cores on any available nodes.
+#PBS -l nodes=1:ppn=4:gpus=1:TeslaV100-16GB
+
+# 4 cores x 8 gb per core = 32 gb total. That's plenty for a large matrix.
+#PBS -l pmem=8gb
+
+# Set the output log to be batch.log
+#PBS -o batch.log
+
+# Set the error log to be batch.err
+#PBS -e batch.err
+
+# Change to the submission directory
+cd $PBS_O_WORKDIR
+
+# Load the cuda module so we can find the run-time libraries
+module load cuda
+
+# Run the code
+./SPSO 1200 100 100 -100 0.2 0.3 0.5> myoutput.log

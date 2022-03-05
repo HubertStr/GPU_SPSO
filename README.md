@@ -40,4 +40,36 @@ Two methods will be implemented:<br/>
 - [ ] Method2: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
 <br/>
 See https://docs.nvidia.com/cuda/curand/host-api-overview.html for random number generation 
+
+## How to run on Pace
+### Basic usage:
+
+1) Load the cuda module:
+
+    ```
+    prompt% module load cuda
+    ```
+
+2) Compile the example:
+
+    ```
+    prompt% make
+    ```
+
+    The Makefile contains many useful bits of information on how to compile a CUDA code
+
+3) Submit the example to PBS:
+
+    ```
+    prompt% qsub run.pbs -q pace-ice-gpu
+    ```
+
+
+4) Compare the program output.
+
+```
+diff batch.err batch.err.ref
+diff batch.log batch.log.ref
+diff myoutput.log myoutput.log.ref
+```
     

@@ -1,0 +1,41 @@
+---------------------------------------
+Begin PBS Prologue Sat Mar  5 13:08:04 EST 2022
+Job ID:     111686.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   pace-jupyter-notebook.pbs
+Queue:      pace-ice
+End PBS Prologue Sat Mar  5 13:08:04 EST 2022
+---------------------------------------
+[I 13:08:10.458 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 13:08:10.458 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 13:08:12.257 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 13:08:12.257 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 13:08:12.257 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 13:08:12.257 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 13:08:12.261 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 13:08:12.261 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 13:08:12.261 NotebookApp] The Jupyter Notebook is running at:
+[I 13:08:12.261 NotebookApp] The Jupyter Notebook is running at:
+[I 13:08:12.262 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[I 13:08:12.262 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[I 13:08:12.262 NotebookApp]  or http://127.0.0.1:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[I 13:08:12.262 NotebookApp]  or http://127.0.0.1:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[I 13:08:12.262 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 13:08:12.262 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 13:08:12.270 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-297871-open.html
+    Or copy and paste one of these URLs:
+        http://atl1-1-02-012-5-l.pace.gatech.edu:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+     or http://127.0.0.1:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[C 13:08:12.270 NotebookApp]
+
+To access the notebook, open this file in a browser:
+file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-297871-open.html
+Or copy and paste one of these URLs:
+http://atl1-1-02-012-5-l.pace.gatech.edu:59305/?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9
+[I 13:08:55.437 NotebookApp] 302 GET /?token=dd55204ab38cc45c75da35abfd187ab2208e539356a145a9 (128.61.254.46) 0.48ms
+[I 13:16:31.774 NotebookApp] Uploading file to /run.pbs
+[I 13:16:32.620 NotebookApp] Uploading file to /Makefile
+[I 13:18:55.234 NotebookApp] Saving file at /README.md
