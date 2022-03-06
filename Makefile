@@ -1,7 +1,7 @@
 # NVIDIA C++ compiler and flags.
 NVCC        = nvcc
 
-LDFLAGS	= -L$(CUDA_ROOT)/lib64 -lcudart
+LDFLAGS	= -L$(CUDA_ROOT)/lib64 -lcudart -lcurand
 
 # Hardware-specific flags for NVIDIA GPU generations. Add any/all.
 GENCODE_SM30    := -gencode arch=compute_30,code=sm_30
