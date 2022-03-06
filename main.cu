@@ -28,6 +28,7 @@ int main(int argc, char**argv){
     float *particle_position, *particle_velocity;
     float *p_best_pos, *p_best_fitness;
     curandState *states;
+    cudaError_t err;
 
 
 if (argc!=9)
@@ -56,7 +57,7 @@ if (argc!=9)
 
     //Particle position array (=Position in Git)
     cudaMalloc((void**)&particle_position, N * D * sizeof(float));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in particle position array memory allocation: %s\n", cudaGetErrorString(err));
@@ -65,7 +66,7 @@ if (argc!=9)
 
     //Velocity array (=Velocity in Git)
     cudaMalloc((void**)&particle_velocity, N * D * sizeof(float));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in velocity array memory allocation: %s\n", cudaGetErrorString(err));
@@ -74,7 +75,7 @@ if (argc!=9)
    
     //Particle best position array (=PBestX in git)
     cudaMalloc((void**)&p_best_pos, N * D * sizeof(float));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in Particle best position array memory allocation: %s\n", cudaGetErrorString(err));
@@ -83,7 +84,7 @@ if (argc!=9)
    
     //Particle best fitness value (=PBestY Array in Git)
     cudaMalloc((void**)&p_best_fitness, N * sizeof(float));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in Particle best fitness value memory allocation: %s\n", cudaGetErrorString(err));
@@ -92,7 +93,7 @@ if (argc!=9)
 
     //Local best index value (from a fintess point of view) (=LBestIndex in Git)
     cudaMalloc((void**)&l_best_index, N * sizeof(int));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )   
    {
       printf("CUDA Error in Local best index value memory allocation: %s\n", cudaGetErrorString(err));
@@ -101,7 +102,7 @@ if (argc!=9)
 
     //Global Best index value (from a fintess point of view)(=GBestIndex in Git)
     cudaMalloc((void**)&best_index, N * sizeof(int));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in Global best index value memory allocation: %s\n", cudaGetErrorString(err));
@@ -110,7 +111,7 @@ if (argc!=9)
    
    // Cuda Rand memory allocation
     cudaMalloc((void**)&states, N * D * sizeof(curandState));
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
     if ( err != cudaSuccess )
     {
       printf("Cuda Rand memory allocation: %s\n", cudaGetErrorString(err));
@@ -128,7 +129,7 @@ if (argc!=9)
 
 //  Initialize the particle's velocity (values of the array within the bounds): 
     curandGenerateUniform(generator, particle_velocity, N * D);
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in random generation for intial particle velocity: %s\n", cudaGetErrorString(err));
@@ -136,7 +137,7 @@ if (argc!=9)
    }
 //  Initialize the particle's position with a uniformly distributed random vector (values within the bounds)
     curandGenerateUniform(generator, particle_position, N * D);
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in random generation for intial particle position: %s\n", cudaGetErrorString(err));
@@ -154,7 +155,7 @@ if (argc!=9)
     const unsigned int numBlocks = N/THREADS_PER_BLOCK;
     dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);    
     Scale_Init <<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
-    cudaError_t err = cudaGetLastError();        // Get error code
+    err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error Scale Init: %s\n", cudaGetErrorString(err));
@@ -169,7 +170,7 @@ if (argc!=9)
     for (int i = 0; i < max_iters; i++){
         Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2, inertia, vmax, chi, N, D);
     }
-   cudaError_t err = cudaGetLastError();        // Get error code
+   err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
    {
       printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
