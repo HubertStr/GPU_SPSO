@@ -18,7 +18,7 @@ $(GENCODE_SM50) $(GENCODE_SM52) $(GENCODE_SM60) $(GENCODE_SM70) $(GENCODE_SM75)
 
 #name executable
 EXE	        = SPSO
-OBJ	        = main.o
+OBJ	        = main.o support.o
 
 #build up flags and targets
 NVCCFLAGS=-O3 $(GENCODE_FLAGS) -Xcompiler -march=native
@@ -30,8 +30,11 @@ LDFLAGS+= -lcublas -L $(CUDA_ROOT)/lib64 -Xcompiler \"-Wl,-rpath,$(CUDA_ROOT)/li
 
 all: $(EXE)
 
-main.o: main.cu kernel.cu
+main.o: main.cu kernel.cu support.h
 	$(NVCC) -c -o $@ main.cu $(NVCCFLAGS)
+
+support.o: support.cu support.h
+	$(NVCC) -c -o $@ support.cu $(NVCCFLAGS)
 
 $(EXE): $(OBJ)
 	$(NVCC) $(OBJ) $(LDFLAGS) -o $(EXE)

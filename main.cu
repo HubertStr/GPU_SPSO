@@ -2,6 +2,7 @@
 
 
 #include <stdio.h>
+#include "support.h"
 #include "kernel.cu"
 #include <curand.h>
 #include <curand_kernel.h>
@@ -15,123 +16,41 @@
 
 int main(int argc, char**argv){
     Timer timer;
-    int N_h;
-    int D_h;
-    float xmax_h;
-    float xmin_h;
-    float c_1_h;
-    float c_2_h;
-    float chi_h;
-    int N;
-    int D;
+    unsigned int N;
+    unsigned int D;
     float xmax;
     float xmin;
-    float chi;
     float c_1;
     float c_2;
-    float inertia_h;int *local_best_index, *best_index;
+    float inertia;
+    float vmax;  
+    int *l_best_index, *best_index;
     float *particle_position, *particle_velocity;
     float *p_best_pos, *p_best_fitness;
     curandState *states;
 
 
-    if (argc<2)
+if (argc!=9)
     {
-        printf("You need add 2 parameters\n");
-        return 1;
+        printf("\n     Invalid number of arguments!");
     }
-    for (int i=1; i<argc; i++){
-        N_h= atoi(argv[i]);
-        D_h= atoi(argv[++i]);
-        xmax_h= atoi(argv[++i]);
-        xmin_h = atoi(argv[++i]);
-        c_1_h = atoi(argv[++i]);
-        c_2_h = atoi(argv[++i]);
-        inertia_h =  atoi(argv[++i]);
-    }
-    chi_h = 2/abs(2-c_1_h-c_2_h-sqrt((c_2_h+c_1_h)**2-4*(c_2_h+c_1_h)))
+
+    N           = atoi(argv[1]);
+    D           = atoi(argv[2]);
+    xmax        = atoi(argv[3]);
+    xmin        = atoi(argv[4]);
+    c_1         = atoi(argv[5]);
+    c_2         = atoi(argv[6]);
+    inertia     = atoi(argv[7]);
+    vmax        = atoi(argv[8]);
+
+    // Calculated variables	
+    float chi;
+    chi = 2/abs(2-c_1 - c_2 - sqrt((c_2+c_1)*(c_2+c_1)-(4*c_2+4*c_1)));
 
 //  MEMORY ALLOCATION
 
-    printf("\nMEMORY ALLOCATION..."); fflush(stdout);
-    startTime(&timer);
-
-    // Host and device meory allocation of input variables
-    printf("Device memory allocation of input variables..."); fflush(stdout);
-
-    cudaMalloc((void**)&N, sizeof(float));
-    cudaMalloc((void**)&D, sizeof(float));
-    cudaMalloc((void**)&xmax, sizeof(float));
-    cudaMalloc((void**)&xmin, sizeof(float));
-    cudaMalloc((void**)&c_1, sizeof(float));
-    cudaMalloc((void**)&c_2, sizeof(float));
-    cudaMalloc((void**)&inertia, sizeof(float));
-    cudaMalloc((void**)&chi, sizeof(float));
-
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-
-    // Migrate from host to device the inputs
-    printf("Migrate from host to device the inputs..."); fflush(stdout);
-    startTime(&timer);    
-
-    cuda_ret = cudaMemcpy(N, N_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in N memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-    cuda_ret = cudaMemcpy(chi, chi_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in N memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(D, D_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in D memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(xmax, xmax_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in xmax memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(xmin, xmin_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in xmin memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(c_1, c_1_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in c_1 memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(c_2, c_2_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in c_2 memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-
-    cuda_ret = cudaMemcpy(inertia, inertia_h, sizeof(float), cudaMemcpyHostToDevice);
-	if(cuda_ret != cudaSuccess)
-    {
-      printf("CUDA Error in inertia memory allocation on device: %s\n", cudaGetErrorString(err));
-      exit(-1);
-    }
-    cudaDeviceSynchronize();
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-
-    // Allocating memory for all other variables that do not come from input
+    // Allocating memory for all variables that do not come from input
     printf("Allocating memory for all other variables that do not come from input ..."); fflush(stdout);
     startTime(&timer); 
 
@@ -188,6 +107,15 @@ int main(int argc, char**argv){
       printf("CUDA Error in Global best index value memory allocation: %s\n", cudaGetErrorString(err));
       exit(-1);
    }
+   
+   // Cuda Rand memory allocation
+    cudaMalloc((void**)&states, N * D * sizeof(curandState));
+    cudaError_t err = cudaGetLastError();        // Get error code
+    if ( err != cudaSuccess )
+    {
+      printf("Cuda Rand memory allocation: %s\n", cudaGetErrorString(err));
+      exit(-1);
+    }   
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
@@ -239,7 +167,7 @@ int main(int argc, char**argv){
     printf("Launch kernel to compute iterations ..."); fflush(stdout);
     startTime(&timer); 
     for (int i = 0; i < max_iters; i++){
-        Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2, D, N, chi);
+        Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2, inertia, vmax, chi, N, D);
     }
    cudaError_t err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
@@ -248,5 +176,15 @@ int main(int argc, char**argv){
       exit(-1);
    }
     cudaDeviceSynchronize();
+    
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+    printf("\nFreeing memory");
+
+    //INSERT CODE HERE to free device matrices
+    cudaFree(particle_position);
+    cudaFree(particle_velocity);
+    cudaFree(p_best_pos);
+    cudaFree(p_best_fitness);
+    cudaFree(l_best_index);
+    cudaFree(best_index);
 }

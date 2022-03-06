@@ -3,7 +3,7 @@
 
 #define inf 9999.99f
 
-__global__ void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, curandState *states){
+__global__ void Scale_Init(float xmax, float xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, curandState *states){
     int index = blockDim.x * blockIdx.x + threadIdx.x;
     int t_index = threadIdx.x;
     
@@ -26,7 +26,7 @@ __global__ void Scale_Init(float *xmax, float *xmin, float *pos, float *velocity
 }
 
 // Kernel to compute the actual iterations of the updates 
-__global__ void Iterations(float *xmax, float *xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float *c_1, float *c_2, *D, *N, *chi){
+__global__ void Iterations(float xmax, float xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, curandState *states, float c_1, float c_2, float inertia, float vmax, float chi, int N, int D){
     int index = threadIdx.x + blockDim.x * blockIdx.x;
     
     float r1, r2;
