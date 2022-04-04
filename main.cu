@@ -2,6 +2,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "support.h"
 #include "kernel.cu"
 #include <curand.h>
@@ -12,7 +13,6 @@
 #define max_iters 2048              //number of iterations
 
 #define inf 9999.99f                //infinity
-
 
 int main(int argc, char**argv){
     Timer timer;
@@ -29,6 +29,8 @@ int main(int argc, char**argv){
     float *p_best_pos, *p_best_fitness;
     curandState *states;
     cudaError_t err;
+    
+    printf("into MAIN");
 
 
 if (argc!=9)
@@ -181,7 +183,7 @@ if (argc!=9)
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
     printf("\nFreeing memory");
 
-    //INSERT CODE HERE to free device matrices
+    //Free device matrices
     cudaFree(particle_position);
     cudaFree(particle_velocity);
     cudaFree(p_best_pos);

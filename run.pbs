@@ -8,10 +8,10 @@
 #PBS -l pmem=8gb
 
 # Set the output log to be batch.log
-#PBS -o batch.log
+#PBS -o ./output/batch.log
 
 # Set the error log to be batch.err
-#PBS -e batch.err
+#PBS -e ./output/batch.err
 
 # Change to the submission directory
 cd $PBS_O_WORKDIR
@@ -20,4 +20,4 @@ cd $PBS_O_WORKDIR
 module load cuda
 
 # Run the code
-./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> myoutput.log
+./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log

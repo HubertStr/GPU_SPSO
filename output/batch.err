@@ -1,0 +1,6 @@
+/var/spool/torque/mom_priv/jobs/111878.sched-pace-ice.pace.gatech.edu.SC: line 23: 242557 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> myoutput.log
+/var/spool/torque/mom_priv/jobs/112861.sched-pace-ice.pace.gatech.edu.SC: line 23: 287058 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> myoutput.log
+/var/spool/torque/mom_priv/jobs/112862.sched-pace-ice.pace.gatech.edu.SC: line 23: 287367 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
+/var/spool/torque/mom_priv/jobs/112863.sched-pace-ice.pace.gatech.edu.SC: line 23: 299384 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
+/var/spool/torque/mom_priv/jobs/112864.sched-pace-ice.pace.gatech.edu.SC: line 23: 300068 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
+/var/spool/torque/mom_priv/jobs/112865.sched-pace-ice.pace.gatech.edu.SC: line 23: 300467 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
