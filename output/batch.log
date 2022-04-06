@@ -118,3 +118,123 @@ Nodes:
 atl1-1-02-009-31.pace.gatech.edu
 End PBS Epilogue Mon Apr  4 16:07:54 EDT 2022
 ---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 15:49:15 EDT 2022
+Job ID:     113052.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 15:49:15 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Epilogue Wed Apr  6 15:49:28 EDT 2022
+Job ID:     113052.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=289416kb,walltime=00:00:14,mem=2440kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 15:49:28 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 15:56:29 EDT 2022
+Job ID:     113055.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 15:56:29 EDT 2022
+---------------------------------------
+into MAIN---------------------------------------
+Begin PBS Epilogue Wed Apr  6 15:56:40 EDT 2022
+Job ID:     113055.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=0kb,walltime=00:00:11,mem=0kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 15:56:40 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 16:05:59 EDT 2022
+Job ID:     113059.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 16:05:59 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Epilogue Wed Apr  6 16:06:00 EDT 2022
+Job ID:     113059.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=0kb,walltime=00:00:02,mem=0kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 16:06:00 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 16:08:03 EDT 2022
+Job ID:     113061.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 16:08:03 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Epilogue Wed Apr  6 16:08:05 EDT 2022
+Job ID:     113061.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=0kb,walltime=00:00:03,mem=0kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 16:08:05 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 16:11:08 EDT 2022
+Job ID:     113062.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 16:11:08 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Epilogue Wed Apr  6 16:11:11 EDT 2022
+Job ID:     113062.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=0kb,walltime=00:00:03,mem=0kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 16:11:11 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Prologue Wed Apr  6 16:12:41 EDT 2022
+Job ID:     113063.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Queue:      pace-ice-gpu
+End PBS Prologue Wed Apr  6 16:12:42 EDT 2022
+---------------------------------------
+---------------------------------------
+Begin PBS Epilogue Wed Apr  6 16:12:44 EDT 2022
+Job ID:     113063.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   run.pbs
+Resources:  walltime=00:10:00,nodes=1:ppn=4:gpus=1:TeslaV100-16GB,pmem=8gb,neednodes=1:ppn=4:gpus=1:TeslaV100-16GB
+Rsrc Used:  cput=00:00:00,vmem=0kb,walltime=00:00:03,mem=0kb,energy_used=0
+Queue:      pace-ice-gpu
+Nodes:     
+atl1-1-02-009-31.pace.gatech.edu
+End PBS Epilogue Wed Apr  6 16:12:44 EDT 2022
+---------------------------------------

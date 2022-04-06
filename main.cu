@@ -30,9 +30,6 @@ int main(int argc, char**argv){
     curandState *states;
     cudaError_t err;
     
-    printf("into MAIN");
-
-
 if (argc!=9)
     {
         printf("\n     Invalid number of arguments!");
@@ -181,7 +178,7 @@ if (argc!=9)
     cudaDeviceSynchronize();
     
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-    printf("\nFreeing memory");
+    printf("Freeing memory");
 
     //Free device matrices
     cudaFree(particle_position);
