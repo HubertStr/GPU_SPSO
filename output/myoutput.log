@@ -1,5 +1,6 @@
-Allocating memory for all other variables that do not come from input ...0.129412 s
-Initialization of random numbers on GPU for particle's velocity and position ...0.010427 s
-Launch kernel to scale and initialize ...0.002215 s
-Launch kernel to compute iterations ...0.194101 s
-Freeing memory
+Allocating memory for all other variables that do not come from input ...0.129695 s
+Initialization of random numbers on GPU for particle's velocity and position ...0.010907 s
+Launch kernel to scale and initialize ...0.002203 s
+Launch kernel to compute iterations ...0.065165 s
+Run kernel to compute reduction - step 1...0.000010 s
+Run kernel to compute reduction - step 2...

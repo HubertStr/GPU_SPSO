@@ -90,3 +90,73 @@ __global__ void Iterations(float xmax, float xmin, float *pos, float *velocity, 
     states[index] = local_state;
       
 }
+
+__global__ void ReduceKernel1(float *best_fitness, int* best_index) {
+
+    // Calculate global thread index based on the block and thread indices ----
+
+    //INSERT KERNEL CODE HERE
+    int i = threadIdx.x + blockDim.x * blockIdx.x; 
+    int tx = threadIdx.x;
+
+    __shared__ float stage[512];
+    __shared__ int best[512];
+    
+    best[tx] = best_index[i];
+    stage[tx] = best_fitness[i];
+
+    __syncthreads();
+
+    for (unsigned int s = blockDim.x / 2; s>0; s >>=1){
+if (tx < s){
+  if (stage[tx] > stage[tx + s]){
+      stage[tx] = stage[tx + s];
+      best[tx] = best[tx + s];
+  }
+}
+__syncthreads();
+    }
+
+    if (tx == 0){
+       best_fitness[blockIdx.x] = stage[0];
+       best_index[blockIdx.x] = best[0];   
+    }
+    
+}
+
+__global__ void ReduceKernel2(float* p_best_pos, float *best_fitness, int* best_index, int D) {
+
+    // Calculate global thread index based on the block and thread indices ----
+
+    //INSERT KERNEL CODE HERE
+    int i = threadIdx.x + blockDim.x * blockIdx.x; 
+    int tx = threadIdx.x;
+    
+    __shared__ float stage[512];
+    __shared__ int best[512];
+    
+    best[tx] = best_index[i];
+    stage[tx] = best_fitness[i];
+
+    __syncthreads();
+
+    for (unsigned int s = blockDim.x / 2; s>0; s >>=1){
+if (tx < s){
+  if (stage[tx] > stage[tx + s]){
+      stage[tx] = stage[tx + s];
+      best[tx] = best[tx + s];
+  }
+}
+__syncthreads();
+    }
+
+    if (tx == 0){
+       best_fitness[blockIdx.x] = stage[0];
+       best_index[blockIdx.x] = best[0];   
+    }
+
+    for (int j = 0; j < D; i++)
+    p_best_pos[j] = p_best_pos[best[0] * D + j];
+     
+   
+}

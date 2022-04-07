@@ -30,7 +30,7 @@ int main(int argc, char**argv){
     curandState *states;
     cudaError_t err;
     
-if (argc!=9)
+    if (argc!=9)
     {
         printf("\n     Invalid number of arguments!");
     }
@@ -150,7 +150,7 @@ if (argc!=9)
 // AND initialize particle best (for each particle) + local best 
     printf("Launch kernel to scale and initialize ..."); fflush(stdout);
     startTime(&timer); 
-    const unsigned int THREADS_PER_BLOCK = 200;
+    const unsigned int THREADS_PER_BLOCK = 32;
     const unsigned int numBlocks = N/THREADS_PER_BLOCK;
     dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);    
     Scale_Init <<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
@@ -178,8 +178,36 @@ if (argc!=9)
     cudaDeviceSynchronize();
     
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-    printf("Freeing memory");
 
+//  Kernel for min computation - ReduceKernel 1
+    printf("Run kernel to compute reduction - step 1..."); fflush(stdout);
+    startTime(&timer); 
+    ReduceKernel1<<< gridDim, blockDim >>>(p_best_fitness, best_index);
+   err = cudaGetLastError();        // Get error code
+   if ( err != cudaSuccess )
+   {
+      printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+      exit(-1);
+   }
+    cudaDeviceSynchronize();
+    
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+    
+//  Kernel for min computation - ReduceKernel 2
+    printf("Run kernel to compute reduction - step 2..."); fflush(stdout);
+    startTime(&timer); 
+    ReduceKernel2<<< 1, gridDim >>>(p_best_pos, p_best_fitness, best_index, D);
+   err = cudaGetLastError();        // Get error code
+   if ( err != cudaSuccess )
+   {
+      printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+      exit(-1);
+   }
+    cudaDeviceSynchronize();
+    
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));    
+    printf("Freeing memory");
+    
     //Free device matrices
     cudaFree(particle_position);
     cudaFree(particle_velocity);

@@ -5,3 +5,7 @@
 /var/spool/torque/mom_priv/jobs/112864.sched-pace-ice.pace.gatech.edu.SC: line 23: 300068 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
 /var/spool/torque/mom_priv/jobs/112865.sched-pace-ice.pace.gatech.edu.SC: line 23: 300467 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
 /var/spool/torque/mom_priv/jobs/113052.sched-pace-ice.pace.gatech.edu.SC: line 23: 295057 Segmentation fault      (core dumped) ./SPSO 1200 100 100 -100 0.2 0.3 0.5 200> ./output/myoutput.log
+=>> PBS: job killed: walltime 659 exceeded limit 600
+=>> PBS: job killed: walltime 602 exceeded limit 600
+=>> PBS: job killed: walltime 623 exceeded limit 600
+=>> PBS: job killed: walltime 1247 exceeded limit 1200
