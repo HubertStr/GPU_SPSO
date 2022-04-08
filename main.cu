@@ -151,7 +151,7 @@ int main(int argc, char**argv){
     printf("Launch kernel to scale and initialize ..."); fflush(stdout);
     startTime(&timer); 
     const unsigned int THREADS_PER_BLOCK = 32;
-    const unsigned int numBlocks = N/THREADS_PER_BLOCK;
+    const unsigned int numBlocks = N/THREADS_PER_BLOCK +1 ;
     dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);    
     Scale_Init <<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
     err = cudaGetLastError();        // Get error code
@@ -183,12 +183,12 @@ int main(int argc, char**argv){
     printf("Run kernel to compute reduction - step 1..."); fflush(stdout);
     startTime(&timer); 
     ReduceKernel1<<< gridDim, blockDim >>>(p_best_fitness, best_index);
-   err = cudaGetLastError();        // Get error code
-   if ( err != cudaSuccess )
-   {
-      printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
-      exit(-1);
-   }
+    err = cudaGetLastError();        // Get error code
+    if ( err != cudaSuccess )
+    {
+        printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+        exit(-1);
+    }
     cudaDeviceSynchronize();
     
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
@@ -196,13 +196,13 @@ int main(int argc, char**argv){
 //  Kernel for min computation - ReduceKernel 2
     printf("Run kernel to compute reduction - step 2..."); fflush(stdout);
     startTime(&timer); 
-    ReduceKernel2<<< 1, gridDim >>>(p_best_pos, p_best_fitness, best_index, D);
-   err = cudaGetLastError();        // Get error code
-   if ( err != cudaSuccess )
-   {
-      printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
-      exit(-1);
-   }
+    ReduceKernel2<<< 1, (N / 32) + 1 >>>(p_best_pos, p_best_fitness, best_index, D);
+    err = cudaGetLastError();        // Get error code
+    if ( err != cudaSuccess )
+    {
+       printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+       exit(-1);
+    }
     cudaDeviceSynchronize();
     
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));    

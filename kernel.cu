@@ -141,13 +141,13 @@ __global__ void ReduceKernel2(float* p_best_pos, float *best_fitness, int* best_
     __syncthreads();
 
     for (unsigned int s = blockDim.x / 2; s>0; s >>=1){
-if (tx < s){
-  if (stage[tx] > stage[tx + s]){
-      stage[tx] = stage[tx + s];
-      best[tx] = best[tx + s];
-  }
-}
-__syncthreads();
+    if (tx < s){
+        if (stage[tx] > stage[tx + s]){
+            stage[tx] = stage[tx + s];
+            best[tx] = best[tx + s];
+            }
+        }
+    __syncthreads();
     }
 
     if (tx == 0){
@@ -155,8 +155,8 @@ __syncthreads();
        best_index[blockIdx.x] = best[0];   
     }
 
-    for (int j = 0; j < D; i++)
-    p_best_pos[j] = p_best_pos[best[0] * D + j];
+    for (int j = 0; j < D; j++){
+        p_best_pos[j] = p_best_pos[best[0] * D + j];}
      
    
 }

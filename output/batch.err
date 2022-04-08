@@ -9,3 +9,5 @@
 =>> PBS: job killed: walltime 602 exceeded limit 600
 =>> PBS: job killed: walltime 623 exceeded limit 600
 =>> PBS: job killed: walltime 1247 exceeded limit 1200
+=>> PBS: job killed: walltime 2401 exceeded limit 2400
+=>> PBS: job killed: walltime 2403 exceeded limit 2400
