@@ -1,8 +1,7 @@
 
 
 #include <stdio.h>
-#include "support.h"
-
+// #include "support.h"
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
@@ -14,10 +13,16 @@
 
 #define inf 9999.99f                //infinity
 
+typedef struct {
+    struct timeval startTime;
+    struct timeval endTime;
+} Timer;
+
 void Scale_Init(float xmax, float xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, int N);
 void Iterations(float xmax, float xmin, float *pos, float *velocity, float *p_best_pos,float *p_best_y, int *l_best_index, int *best_index, float c_1, float c_2, float inertia, float vmax, float chi, int N, int D);
-
-
+void startTime(Timer* timer);
+void stopTime(Timer* timer);    
+float elapsedTime(Timer timer);
 
 int main(int argc, char**argv){
     Timer timer;    
@@ -29,8 +34,6 @@ int main(int argc, char**argv){
     float c_2;
     float inertia;
     float vmax;  
-
-
 
 if (argc!=9)
     {
@@ -117,9 +120,9 @@ if (argc!=9)
     printf("Run kernel to compute reduction - step 1..."); fflush(stdout);
     startTime(&timer); 
 
-    int a;
-    a = p_best_pos[argMin(p_best_fitness)] ;
-    p_best_pos[a];
+//    int a;
+//    a = p_best_pos[argMin(p_best_fitness)] ;
+//    p_best_pos[a];
     
     printf("\nFreeing memory");
 
@@ -220,5 +223,17 @@ void Iterations(float xmax, float xmin, float *pos, float *velocity, float *p_be
 }
 
 
+void startTime(Timer* timer) {
+    gettimeofday(&(timer->startTime), NULL);
+}
+
+void stopTime(Timer* timer) {
+    gettimeofday(&(timer->endTime), NULL);
+}
+
+float elapsedTime(Timer timer) {
+    return ((float) ((timer.endTime.tv_sec - timer.startTime.tv_sec) \
+                + (timer.endTime.tv_usec - timer.startTime.tv_usec)/1.0e6));
+}
 
 

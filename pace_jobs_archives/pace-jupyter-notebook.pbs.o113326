@@ -1,0 +1,65 @@
+---------------------------------------
+Begin PBS Prologue Fri Apr  8 13:12:25 EDT 2022
+Job ID:     113326.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   pace-jupyter-notebook.pbs
+Queue:      pace-ice
+End PBS Prologue Fri Apr  8 13:12:25 EDT 2022
+---------------------------------------
+[I 13:12:31.414 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 13:12:31.414 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 13:12:33.082 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 13:12:33.082 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 13:12:33.083 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 13:12:33.083 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 13:12:33.087 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 13:12:33.087 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 13:12:33.087 NotebookApp] The Jupyter Notebook is running at:
+[I 13:12:33.087 NotebookApp] The Jupyter Notebook is running at:
+[I 13:12:33.087 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[I 13:12:33.087 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[I 13:12:33.087 NotebookApp]  or http://127.0.0.1:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[I 13:12:33.087 NotebookApp]  or http://127.0.0.1:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[I 13:12:33.087 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 13:12:33.087 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 13:12:33.095 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-419292-open.html
+    Or copy and paste one of these URLs:
+        http://atl1-1-02-012-5-l.pace.gatech.edu:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+     or http://127.0.0.1:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[C 13:12:33.095 NotebookApp]
+
+To access the notebook, open this file in a browser:
+file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-419292-open.html
+Or copy and paste one of these URLs:
+http://atl1-1-02-012-5-l.pace.gatech.edu:59949/?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f
+[I 13:12:50.293 NotebookApp] 302 GET /?token=0a5437c97422798a3a74b79cfd27e511575a93934f9b216f (128.61.254.46) 0.46ms
+[I 13:13:55.250 NotebookApp] Copying Makefile to 
+[W 13:17:18.836 NotebookApp] delete /Makefile
+[I 13:25:49.160 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 13:36:38.956 NotebookApp] Copying Makefile to 
+[I 13:37:00.726 NotebookApp] Saving file at /Makefile
+[I 13:37:58.763 NotebookApp] Saving file at /Makefile
+[I 13:38:50.730 NotebookApp] Saving file at /Makefile
+[I 13:50:10.188 NotebookApp] Saving file at /main_CPU_prototype.c
+[W 13:51:14.390 NotebookApp] delete /main_CPU_prototype.o
+[I 14:01:10.169 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:01:12.938 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:03:58.597 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:04:18.351 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:04:35.821 NotebookApp] Saving file at /support.h
+[W 14:05:25.865 NotebookApp] delete /main_CPU_prototype.o
+[I 14:07:15.036 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:09:39.163 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:09:47.210 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:10:19.541 NotebookApp] Saving file at /main_CPU_prototype.c
+[I 14:10:38.856 NotebookApp] Saving file at /main_CPU_prototype.c
+[W 14:12:04.457 NotebookApp] 409 PATCH /api/contents/Makefile-GPU (128.61.254.46): File already exists: Makefile
+[W 14:12:04.457 NotebookApp] File already exists: Makefile
+[W 14:12:04.457 NotebookApp] 409 PATCH /api/contents/Makefile-GPU (128.61.254.46) 1.13ms referer=http://localhost:59949/tree
+[I 14:12:11.352 NotebookApp] Creating new directory in 
+[I 14:12:18.323 NotebookApp] Creating new directory in 
+[W 14:12:26.773 NotebookApp] delete /Untitled Folder 1
+[C 14:12:33.130 NotebookApp] received signal 15, stopping

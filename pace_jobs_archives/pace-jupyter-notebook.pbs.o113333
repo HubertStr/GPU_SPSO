@@ -1,0 +1,44 @@
+---------------------------------------
+Begin PBS Prologue Fri Apr  8 14:14:09 EDT 2022
+Job ID:     113333.sched-pace-ice.pace.gatech.edu
+User ID:    hstrauss6
+Job name:   pace-jupyter-notebook.pbs
+Queue:      pace-ice
+End PBS Prologue Fri Apr  8 14:14:09 EDT 2022
+---------------------------------------
+[I 14:14:15.281 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 14:14:15.281 NotebookApp] [nb_conda_kernels] enabled, 9 kernels found
+[I 14:14:16.866 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 14:14:16.866 NotebookApp] JupyterLab extension loaded from /usr/local/pace-apps/manual/packages/anaconda3/2020.02/lib/python3.7/site-packages/jupyterlab
+[I 14:14:16.866 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 14:14:16.866 NotebookApp] JupyterLab application directory is /usr/local/pace-apps/manual/packages/anaconda3/2020.02/share/jupyter/lab
+[I 14:14:16.870 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 14:14:16.870 NotebookApp] Serving notebooks from local directory: /storage/home/hpaceice1/hstrauss6/ISYE6679_project/GPU_SPSO
+[I 14:14:16.870 NotebookApp] The Jupyter Notebook is running at:
+[I 14:14:16.870 NotebookApp] The Jupyter Notebook is running at:
+[I 14:14:16.871 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[I 14:14:16.871 NotebookApp] http://atl1-1-02-012-5-l.pace.gatech.edu:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[I 14:14:16.871 NotebookApp]  or http://127.0.0.1:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[I 14:14:16.871 NotebookApp]  or http://127.0.0.1:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[I 14:14:16.871 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 14:14:16.871 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 14:14:16.878 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-424043-open.html
+    Or copy and paste one of these URLs:
+        http://atl1-1-02-012-5-l.pace.gatech.edu:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+     or http://127.0.0.1:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[C 14:14:16.878 NotebookApp]
+
+To access the notebook, open this file in a browser:
+file:///storage/home/hpaceice1/hstrauss6/.local/share/jupyter/runtime/nbserver-424043-open.html
+Or copy and paste one of these URLs:
+http://atl1-1-02-012-5-l.pace.gatech.edu:55775/?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0
+[I 14:14:35.992 NotebookApp] 302 GET /?token=460b30402bba1f171b631c4387b9b0136dee27d89e8ca5b0 (128.61.254.46) 0.46ms
+[W 14:14:42.431 NotebookApp] delete /cub-1.8.0.zip
+[W 14:14:49.845 NotebookApp] delete /cub-1.8.0
+[W 14:14:59.875 NotebookApp] delete /main_CPU_prototype
+[W 14:15:22.421 NotebookApp] 409 PATCH /api/contents/pace-jupyter-notebook.pbs (128.61.254.46): File already exists: pace_jobs_archives/pace-jupyter-notebook.pbs
+[W 14:15:22.421 NotebookApp] File already exists: pace_jobs_archives/pace-jupyter-notebook.pbs
+[W 14:15:22.421 NotebookApp] 409 PATCH /api/contents/pace-jupyter-notebook.pbs (128.61.254.46) 6.40ms referer=http://localhost:55775/tree
