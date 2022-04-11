@@ -48,8 +48,11 @@ Two methods will be implemented:<br/>
     ```
     prompt% module load cuda
     ```
-
-2) Compile the example:
+2) Delete the previously compiled example:
+    ```
+    prompt% make clean
+    ```
+3) Compile the example:
 
     ```
     prompt% make
@@ -57,7 +60,7 @@ Two methods will be implemented:<br/>
 
     The Makefile contains many useful bits of information on how to compile a CUDA code
 
-3) Submit the example to PBS. As the example is based on f1, submit the corresponding file:
+4) Submit the example to PBS. As the example is based on f1, submit the corresponding file:
 
     ```
     prompt% qsub run_f1.pbs -q pace-ice-gpu
