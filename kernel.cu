@@ -1,6 +1,8 @@
 #include <curand.h>
 #include <curand_kernel.h>
+#include <math.h>
 
+#define PI 3.14159265
 #define inf 9999.99f
 
 __global__ void Scale_Init(float xmax, float xmin, float *pos, float *velocity, float *p_best_y, int *l_best_index, int *best_index, curandState *states){
@@ -38,8 +40,29 @@ __global__ void Iterations(float xmax, float xmin, float *pos, float *velocity, 
   
     //Calculate fitness of particle
     float fitness = 0.0f;
+//    float fitness2 = 1.0f;
+//    float fitness1 = 0.0f;    
+
+// For f1
     for (int i = 0; i < D; i++)
-        fitness += pos[index * D + i] * pos[index * D +i];
+        fitness += pos[index * D + i]*pos[index * D + i];
+        
+// For f2
+//    for (int i = 0; i < D ; i++)
+//        fitness += pos[index * D + i]*pos[index * D + i] - 10*cos(2*PI*pos[index * D + i]) +10;
+
+// For f3
+//    for (int i = 0; i < D; i++)
+//        fitness1 += pos[index * D + i]*pos[index * D + i];
+//        fitness2 *= cos(pos[index * D + i]/sqrt((float) index * D + j)
+//    fitness = (1/4000)*fitness1 - fitness2 + 1
+        
+// For f4
+//    for (int i = 0; i < D -1; i++)
+//        fitness += (100*(pos[index * D + i + 1] - pos[index * D + i]*pos[index * D + i])*(pos[index * D + i + 1] 
+//    - pos[index * D + i]*pos[index * D + i]) + (pos[index * D + i] - 1)*(pos[index * D + i] - 1)) ;
+        
+        
   
    
     //If fitness is better, change particle best
@@ -91,7 +114,7 @@ __global__ void Iterations(float xmax, float xmin, float *pos, float *velocity, 
       
 }
 
-__global__ void ReduceKernel1(float *best_fitness, int* best_index) {
+__global__ void ReduceKernel1(float *p_best_fitness, int* best_index) {
 
     // Calculate global thread index based on the block and thread indices ----
 
@@ -103,40 +126,7 @@ __global__ void ReduceKernel1(float *best_fitness, int* best_index) {
     __shared__ int best[512];
     
     best[tx] = best_index[i];
-    stage[tx] = best_fitness[i];
-
-    __syncthreads();
-
-    for (unsigned int s = blockDim.x / 2; s>0; s >>=1){
-if (tx < s){
-  if (stage[tx] > stage[tx + s]){
-      stage[tx] = stage[tx + s];
-      best[tx] = best[tx + s];
-  }
-}
-__syncthreads();
-    }
-
-    if (tx == 0){
-       best_fitness[blockIdx.x] = stage[0];
-       best_index[blockIdx.x] = best[0];   
-    }
-    
-}
-
-__global__ void ReduceKernel2(float* p_best_pos, float *best_fitness, int* best_index, int D) {
-
-    // Calculate global thread index based on the block and thread indices ----
-
-    //INSERT KERNEL CODE HERE
-    int i = threadIdx.x + blockDim.x * blockIdx.x; 
-    int tx = threadIdx.x;
-    
-    __shared__ float stage[512];
-    __shared__ int best[512];
-    
-    best[tx] = best_index[i];
-    stage[tx] = best_fitness[i];
+    stage[tx] = p_best_fitness[i];
 
     __syncthreads();
 
@@ -151,7 +141,40 @@ __global__ void ReduceKernel2(float* p_best_pos, float *best_fitness, int* best_
     }
 
     if (tx == 0){
-       best_fitness[blockIdx.x] = stage[0];
+       p_best_fitness[blockIdx.x] = stage[0];
+       best_index[blockIdx.x] = best[0];   
+    }
+    
+}
+
+__global__ void ReduceKernel2(float* p_best_pos, float *p_best_fitness, int* best_index, int D) {
+
+    // Calculate global thread index based on the block and thread indices ----
+
+    //INSERT KERNEL CODE HERE
+    int i = threadIdx.x + blockDim.x * blockIdx.x; 
+    int tx = threadIdx.x;
+    
+    __shared__ float stage[512];
+    __shared__ int best[512];
+    
+    best[tx] = best_index[i];
+    stage[tx] = p_best_fitness[i];
+
+    __syncthreads();
+
+    for (unsigned int s = blockDim.x / 2; s>0; s >>=1){
+    if (tx < s){
+        if (stage[tx] > stage[tx + s]){
+            stage[tx] = stage[tx + s];
+            best[tx] = best[tx + s];
+            }
+        }
+    __syncthreads();
+    }
+
+    if (tx == 0){
+       p_best_fitness[blockIdx.x] = stage[0];
        best_index[blockIdx.x] = best[0];   
     }
 

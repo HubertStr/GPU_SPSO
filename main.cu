@@ -28,8 +28,12 @@ int main(int argc, char**argv){
     float *particle_position, *particle_velocity;
     float *p_best_pos, *p_best_fitness;
     curandState *states;
+    float *g_best_pos;
+    float *g_best;
     cudaError_t err;
-    
+
+    startTime(&timer); 
+
     if (argc!=9)
     {
         printf("\n     Invalid number of arguments!");
@@ -51,9 +55,12 @@ int main(int argc, char**argv){
 //  MEMORY ALLOCATION
 
     // Allocating memory for all variables that do not come from input
-    printf("Allocating memory for all other variables that do not come from input ..."); fflush(stdout);
-    startTime(&timer); 
+//    printf("Allocating memory for all other variables that do not come from input ..."); fflush(stdout);
 
+    //Dynamically allocating memory for results
+    g_best = new float;
+    g_best_pos = new float[D];
+    
     //Particle position array (=Position in Git)
     cudaMalloc((void**)&particle_position, N * D * sizeof(float));
     err = cudaGetLastError();        // Get error code
@@ -120,7 +127,7 @@ int main(int argc, char**argv){
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
 //  Initialization of random numbers on GPU
-    printf("Initialization of random numbers on GPU for particle's velocity and position ..."); fflush(stdout);
+//    printf("Initialization of random numbers on GPU for particle's velocity and position ..."); fflush(stdout);
     startTime(&timer); 
     curandGenerator_t generator;
     curandCreateGenerator(&generator, CURAND_RNG_PSEUDO_DEFAULT);
@@ -143,14 +150,14 @@ int main(int argc, char**argv){
       exit(-1);
    }
     cudaDeviceSynchronize();
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+//    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
 
 // Scale velocity and position values to be between the max and min (and not between 0 and 1 anymore)
 // AND initialize particle best (for each particle) + local best 
-    printf("Launch kernel to scale and initialize ..."); fflush(stdout);
-    startTime(&timer); 
-    const unsigned int THREADS_PER_BLOCK = 32;
+//    printf("Launch kernel to scale and initialize ..."); fflush(stdout);
+//    startTime(&timer); 
+    const unsigned int THREADS_PER_BLOCK = 20;
     const unsigned int numBlocks = N/THREADS_PER_BLOCK +1 ;
     dim3 gridDim(numBlocks, 1, 1), blockDim(THREADS_PER_BLOCK, 1, 1);    
     Scale_Init <<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, states);
@@ -161,11 +168,11 @@ int main(int argc, char**argv){
       exit(-1);
    }
     cudaDeviceSynchronize();
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+//    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
 //  Kernel for iterations
-    printf("Launch kernel to compute iterations ..."); fflush(stdout);
-    startTime(&timer); 
+//    printf("Launch kernel to compute iterations ..."); fflush(stdout);
+//    startTime(&timer); 
     for (int i = 0; i < max_iters; i++){
         Iterations<<< gridDim, blockDim >>>(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, states, c_1, c_2, inertia, vmax, chi, N, D);
     }
@@ -177,36 +184,54 @@ int main(int argc, char**argv){
    }
     cudaDeviceSynchronize();
     
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+//    stopTime(&timer); printf("%f s\n", elapsedTime(timer)); 
 
 //  Kernel for min computation - ReduceKernel 1
-    printf("Run kernel to compute reduction - step 1..."); fflush(stdout);
-    startTime(&timer); 
+//    printf("Run kernel to compute reduction - step 1..."); fflush(stdout);
+//    startTime(&timer); 
     ReduceKernel1<<< gridDim, blockDim >>>(p_best_fitness, best_index);
     err = cudaGetLastError();        // Get error code
     if ( err != cudaSuccess )
     {
-        printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+        printf("CUDA Error in ReduceKernel1: %s\n", cudaGetErrorString(err));
         exit(-1);
     }
     cudaDeviceSynchronize();
     
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+//    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
     
 //  Kernel for min computation - ReduceKernel 2
-    printf("Run kernel to compute reduction - step 2..."); fflush(stdout);
-    startTime(&timer); 
-    ReduceKernel2<<< 1, (N / 32) + 1 >>>(p_best_pos, p_best_fitness, best_index, D);
+//    printf("Run kernel to compute reduction - step 2..."); fflush(stdout);
+//    startTime(&timer); 
+    ReduceKernel2<<< 1, (N / 20) + 1 >>>(p_best_pos, p_best_fitness, best_index, D);
     err = cudaGetLastError();        // Get error code
     if ( err != cudaSuccess )
     {
-       printf("CUDA Error in iterations: %s\n", cudaGetErrorString(err));
+       printf("CUDA Error in ReduceKernel2: %s\n", cudaGetErrorString(err));
        exit(-1);
     }
     cudaDeviceSynchronize();
     
-    stopTime(&timer); printf("%f s\n", elapsedTime(timer));    
-    printf("Freeing memory");
+//    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+
+    cudaMemcpy((void*)g_best, (void*)p_best_fitness, sizeof(float), cudaMemcpyDeviceToHost);
+    if ( err != cudaSuccess )
+    {
+       printf("CUDA Error in global min: %s\n", cudaGetErrorString(err));
+       exit(-1);
+    }
+    
+    //Copy co-ordinates of global minimum
+    cudaMemcpy((void*)g_best_pos, (void*)p_best_pos, D * sizeof(float), cudaMemcpyDeviceToHost);
+    if ( err != cudaSuccess )
+    {
+       printf("CUDA Error in coordinates global min: %s\n", cudaGetErrorString(err));
+       exit(-1);
+    }
+    
+    printf("%f \n", g_best);
+
+//    printf("Freeing memory");
     
     //Free device matrices
     cudaFree(particle_position);
@@ -215,4 +240,9 @@ int main(int argc, char**argv){
     cudaFree(p_best_fitness);
     cudaFree(l_best_index);
     cudaFree(best_index);
+    
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+    printf("\n");
+
+
 }
