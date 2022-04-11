@@ -3,7 +3,7 @@ GPU-based Parallel Particle Swarm Optimization
 
 ## Link of the paper
 Our project is based on the following paper:<br/>
-![Link to paper](https://ieeexplore.ieee.org/document/4983119).
+https://ieeexplore.ieee.org/document/4983119
 
 ## Objective functions:
 f1:
@@ -25,8 +25,8 @@ In this project, we will look at 4 dimensions:<br/>
 50, 100, 150, 200
 
 #### Swarm population
-In this project, we will look at 4 dimensions:<br/>
-400, 1200, 2000, 2800
+In this project, we will look at 6 swarm populations:<br/>
+400, 1200, 2000, 2800, 10000, 20000
 
 #### Domains
 f1: (-100, 100)^D<br/>
@@ -34,12 +34,11 @@ f2: (-10, 10)^D<br/>
 f3: (-600, 600)^D<br/>
 f4: (-10, 10)^D<br/>
 
-## First step: Random number generation
+## Two different ways of running the algorithm
 Two methods will be implemented:<br/>
-- [ ] Method1: Uses cuRAND to generate pseudorandom numbers on the GPU.<br/>
-- [ ] Method2: M (M >> D∗N) random numbers are generated on CPU before running SPSO. Then they are transported to GPU once for ado and stored in an array R on the global memory.<br/>
+- [ ] Method1: Uses cuRAND to generate pseudorandom numbers on the GPU. The computations are done on GPU. The corresponding file is named main.cu.<br/>
+- [ ] Method2: Random numbers are generated on CPU, as well as the computations. This method is used as a comparison. The corresponding file is named main_CPU.c.<br/>
 <br/>
-See https://docs.nvidia.com/cuda/curand/host-api-overview.html for random number generation 
 
 ## How to run on Pace
 ### Basic usage:
@@ -58,18 +57,9 @@ See https://docs.nvidia.com/cuda/curand/host-api-overview.html for random number
 
     The Makefile contains many useful bits of information on how to compile a CUDA code
 
-3) Submit the example to PBS:
+3) Submit the example to PBS. As the example is based on f1, submit the corresponding file:
 
     ```
-    prompt% qsub run.pbs -q pace-ice-gpu
+    prompt% qsub run_f1.pbs -q pace-ice-gpu
     ```
-
-
-4) Compare the program output.
-
-```
-diff batch.err batch.err.ref
-diff batch.log batch.log.ref
-diff myoutput.log myoutput.log.ref
-```
     
