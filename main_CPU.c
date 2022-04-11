@@ -51,7 +51,6 @@ int main(int argc, char**argv){
 
     // Allocating memory for all variables that do not come from input
     printf("Allocating memory for all other variables that do not come from input ..."); fflush(stdout);
-    //startTime(&timer); 
 
     //Particle position array (=Position in Git)
     float *particle_position; //IF ** then, you can't use the functions defined above
@@ -79,48 +78,23 @@ int main(int argc, char**argv){
     int *best_index;
     best_index = (int*)malloc( N * sizeof(int));
 
-    //stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-
     // Initialization of random numbers on GPU // Do this on CPU?
     printf("\nInitialization of random numbers on GPU for particle's velocity and position ... "); fflush(stdout);
-    //startTime(&timer); 
-
-    //stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
     // Scale velocity and position values to be between the max and min (and not between 0 and 1 anymore)
     // AND initialize particle best (for each particle) + local best 
     fflush(stdout);
-    //startTime(&timer); 
     Scale_Init(xmax, xmin, particle_position, particle_velocity, p_best_fitness, l_best_index, best_index, N);
-
-    //stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-
+    
     // Kernel for iterations
     printf("\nRunning iterations of SPSO ... "); fflush(stdout);
     fflush(stdout);
-    //startTime(&timer); 
     for (int i = 0; i < max_iters; i++){
         Iterations(xmax, xmin, particle_position, particle_velocity, p_best_pos, p_best_fitness, l_best_index, best_index, c_1, c_2, inertia, vmax, chi, N, D);
     }
-    //stopTime(&timer); printf("%f s\n", elapsedTime(timer));
-
-    /*
-    //Print best fintess of each particle
-    for(int index = 0; index < N; index++){
-    printf( "\n%f", p_best_fitness[index] );
-    //printf( "\n" );
-    }
-    */
 
     printf("\nCompute reduction"); fflush(stdout);
-    //startTime(&timer); 
-
-    int a;
-    a = arg_min(p_best_fitness,N);
-    //a = p_best_pos[arg_min(p_best_fitness, N)] ;
-    //p_best_pos[a];
-    printf("\nThe best particle index is %i", a);
-
+    
     t = clock() - t;
     double time_taken = ((double)t)/CLOCKS_PER_SEC;
 
@@ -202,7 +176,6 @@ void Iterations(float xmax, float xmin, float *pos, float *velocity, float *p_be
         if (pos[j] < xmin)
             pos[j] = xmin;
     }
-//Set the current state of the PRNG
 }
 }
 
