@@ -65,6 +65,6 @@ Two methods will be implemented:<br/>
     ```
     prompt% qsub run_f1.pbs -q pace-ice-gpu
     ```
-    
-    ### For the CPU code:
+   
+### For the CPU code:
 
