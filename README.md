@@ -41,7 +41,7 @@ Two methods will be implemented:<br/>
 <br/>
 
 ## How to run on Pace
-### Basic usage:
+### For the GPU code:
 
 1) Load the cuda module:
 
@@ -66,3 +66,5 @@ Two methods will be implemented:<br/>
     prompt% qsub run_f1.pbs -q pace-ice-gpu
     ```
     
+    ### For the CPU code:
+
