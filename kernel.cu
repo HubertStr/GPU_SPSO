@@ -118,7 +118,6 @@ __global__ void ReduceKernel1(float *p_best_fitness, int* best_index) {
 
     // Calculate global thread index based on the block and thread indices ----
 
-    //INSERT KERNEL CODE HERE
     int i = threadIdx.x + blockDim.x * blockIdx.x; 
     int tx = threadIdx.x;
 
@@ -151,7 +150,6 @@ __global__ void ReduceKernel2(float* p_best_pos, float *p_best_fitness, int* bes
 
     // Calculate global thread index based on the block and thread indices ----
 
-    //INSERT KERNEL CODE HERE
     int i = threadIdx.x + blockDim.x * blockIdx.x; 
     int tx = threadIdx.x;
     
