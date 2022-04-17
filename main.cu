@@ -61,7 +61,7 @@ int main(int argc, char**argv){
     g_best = new float;
     g_best_pos = new float[D];
     
-    //Particle position array (=Position in Git)
+    //Particle position array
     cudaMalloc((void**)&particle_position, N * D * sizeof(float));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
@@ -70,7 +70,7 @@ int main(int argc, char**argv){
       exit(-1);
    }
 
-    //Velocity array (=Velocity in Git)
+    //Velocity array
     cudaMalloc((void**)&particle_velocity, N * D * sizeof(float));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
@@ -79,7 +79,7 @@ int main(int argc, char**argv){
       exit(-1);
    }
    
-    //Particle best position array (=PBestX in git)
+    //Particle best position array
     cudaMalloc((void**)&p_best_pos, N * D * sizeof(float));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
@@ -88,7 +88,7 @@ int main(int argc, char**argv){
       exit(-1);
    }
    
-    //Particle best fitness value (=PBestY Array in Git)
+    //Particle best fitness value
     cudaMalloc((void**)&p_best_fitness, N * sizeof(float));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
@@ -97,7 +97,7 @@ int main(int argc, char**argv){
       exit(-1);
    }
 
-    //Local best index value (from a fintess point of view) (=LBestIndex in Git)
+    //Local best index value (from a fintess point of view)
     cudaMalloc((void**)&l_best_index, N * sizeof(int));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )   
@@ -106,7 +106,7 @@ int main(int argc, char**argv){
       exit(-1);
    }
 
-    //Global Best index value (from a fintess point of view)(=GBestIndex in Git)
+    //Global Best index value (from a fintess point of view)
     cudaMalloc((void**)&best_index, N * sizeof(int));
     err = cudaGetLastError();        // Get error code
    if ( err != cudaSuccess )
