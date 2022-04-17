@@ -68,3 +68,16 @@ Two methods will be implemented:<br/>
    
 ### For the CPU code:
 
+1) Compile program with gcc 
+
+    ```
+    prompt% gcc -Wall -g -o spsocpu spsocpu.c -lm
+    ```
+
+2) Run program with the selected parameters and store output in a text file
+
+    ```
+    prompt% ./spsocpu 2800 2500 10 -10 0.2 0.3 .5 2 >> output.txt
+    ```
+
+
