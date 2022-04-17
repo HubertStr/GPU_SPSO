@@ -25,8 +25,8 @@ In this project, we will look at 4 dimensions:<br/>
 50, 100, 150, 200
 
 #### Swarm population
-In this project, we will look at 6 swarm populations:<br/>
-400, 1200, 2000, 2800, 10000, 20000
+In this project, we will look at 4 swarm populations:<br/>
+400, 1200, 2000, 2800
 
 #### Domains
 f1: (-100, 100)^D<br/>
